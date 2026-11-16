@@ -90,6 +90,16 @@ test('a reply’s hand-off block lands in the band count and the pane', async ($
   }
 })
 
+test('the button sits on one line with what is beneath', async ($, on) => {
+  engine(on)
+  await $.turn.complete(turn(REPLY))
+
+  const band = await $.ui.mount({ ...BAND, surface: 'terminal' })
+  const directions = (await band.findAll({ type: 'Box' })).map(b => b.props.flexDirection)
+  expect(directions).toContain('row')
+  await band.unmount()
+})
+
 test('nothing is kept from a reply without the block, or from a subagent’s', async ($, on) => {
   engine(on)
   await $.turn.complete(turn('All done, nothing owed.'))

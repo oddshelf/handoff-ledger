@@ -107,18 +107,16 @@ export const register: Register = (on, options) => {
 
     const { Box, Button } = $.ui.resolve(e)
     return (
-      <Box flexDirection="column">
+      <Box flexDirection="row" gap={2}>
         {below}
-        <Box>
-          <Button
-            key="handoffs"
-            plain
-            label={`✋ ${title} ${list.length}`}
-            onPress={() => {
-              void $.ui.open({ id: PANE, title })
-            }}
-          />
-        </Box>
+        <Button
+          key="handoffs"
+          plain
+          label={`✋ ${title} ${list.length}`}
+          onPress={() => {
+            void $.ui.open({ id: PANE, title })
+          }}
+        />
       </Box>
     )
   })
