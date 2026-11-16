@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
-<rect width="760" height="340" rx="14" fill="#1c2230"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="368" viewBox="0 0 760 368" font-family="'Helvetica Neue', Helvetica, Arial, sans-serif">
+<rect width="760" height="368" rx="14" fill="#1c2230"/>
 <text x="28" y="52" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#e6e9ee">Done. Two commits on the branch.</text>
 <text x="28" y="74" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#8b95a7"></text>
 <text x="28" y="96" font-size="14" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#5b8fe0">**Your turn**</text>
@@ -12,7 +12,7 @@
 <rect x="42" y="262" width="328" height="36" rx="8" fill="#1c2230"/>
 <text x="56" y="285" font-size="14" fill="#8b95a7">Reply…</text>
 <g transform="translate(412 24)">
-<rect width="320" height="292" rx="12" fill="#232a3a"/>
+<rect width="320" height="320" rx="12" fill="#232a3a"/>
 <text x="20" y="34" font-size="15" font-weight="700" fill="#8b95a7">Your turn</text>
 <text x="20" y="68" font-size="15" fill="#e6e9ee">Push the branch</text>
 <text x="20" y="90" font-size="13" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" fill="#8b95a7">git push origin main</text>
@@ -26,5 +26,7 @@
 <text x="20" y="222" font-size="15" fill="#e6e9ee">Upload the social preview</text>
 <rect x="20" y="232" width="56" height="26" rx="6" fill="#323c50"/>
 <text x="48" y="250" font-size="13" text-anchor="middle" fill="#e6e9ee">Done</text>
+<rect x="20" y="276" width="76" height="26" rx="6" fill="#323c50"/>
+<text x="58" y="294" font-size="13" text-anchor="middle" fill="#e6e9ee">Clear all</text>
 </g>
 </svg>

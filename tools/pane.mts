@@ -12,7 +12,7 @@ export const COLOR = {
 export const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 export const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 export const TITLE = 'Your turn'
-export const PANE = { width: 320, height: 292 } as const
+export const PANE = { width: 320, height: 320 } as const
 
 const ITEMS = [
   { text: 'Push the branch', command: 'git push origin main' },
@@ -43,5 +43,6 @@ export const pane = () => {
     }
     y += 26 + 30
   }
+  parts.push(button(20, y - 12, 76, 'Clear all'))
   return parts.join('\n')
 }

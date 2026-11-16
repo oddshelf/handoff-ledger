@@ -12,6 +12,7 @@ const MARKER = /^(?:[-*]|\d+\.)\s+/
 // Only redraws the readers: the ledger is read from the store at each draw, because
 // a desktop session starts in a spare folder and gets its real cwd afterwards.
 const tick = atom({ plugin: 'handoff-ledger', key: 'tick' } as const, 0, { shape: 'tick-1' })
+const armed = atom({ plugin: 'handoff-ledger', key: 'armed' } as const, false, { shape: 'armed-1' })
 
 const parse = (answer: string, heading: string): Draft[] => {
   const lines = answer.split('\n')
@@ -63,6 +64,8 @@ const load = async ($: EngineInterface): Promise<Handoff[]> => {
 const change = async ($: EngineInterface, fn: (list: Handoff[]) => Handoff[]) => {
   const list = fn(await load($))
   await $.store.set(await key($), list)
+  // A Clear all armed against one list must not fire on another.
+  await update($, armed, () => false)
   await update($, tick, n => n + 1)
 }
 
@@ -89,7 +92,8 @@ export const register: Register = (on, options) => {
     await change($, list => [
       ...list,
       ...found
-        .filter(f => !list.some(o => o.text === f.text && o.command === f.command))
+        // A command is the item's identity: a reply rewords the line beside it.
+        .filter(f => !list.some(o => o.command === f.command && (f.command !== undefined || o.text === f.text)))
         .map((f, i) => ({ ...f, id: `${at}-${i}`, at })),
     ])
     return r
@@ -124,6 +128,7 @@ export const register: Register = (on, options) => {
     await read($, tick)
     const list = await load($)
     const now = await $.clock.now()
+    const isArmed = await read($, armed)
 
     return (
       <Box flexDirection="column" gap={1}>
@@ -160,6 +165,26 @@ export const register: Register = (on, options) => {
             </Box>
           )
         })}
+        {list.length > 0 && (
+          <Box flexDirection="row" gap={1}>
+            <Button
+              key="clear"
+              label={isArmed ? `Clear all ${list.length}?` : 'Clear all'}
+              onPress={() => {
+                void (isArmed ? change($, () => []) : update($, armed, () => true))
+              }}
+            />
+            {isArmed && (
+              <Button
+                key="keep"
+                label="Keep"
+                onPress={() => {
+                  void update($, armed, () => false)
+                }}
+              />
+            )}
+          </Box>
+        )}
       </Box>
     )
   })
