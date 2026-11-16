@@ -15,7 +15,8 @@ install and out of the plugin directory's review.
 Each is pinned by a test in `plugin/tests/ledger.test.tsx`.
 
 - **Render what is beneath.** The `AbovePrompt` hook awaits `next(e)` and
-  returns it inside its own column; dropping it erases every other mod's band.
+  returns it on one line with its own button; dropping it erases whatever
+  another mod drew on this row.
 - **Draw nothing when nothing is owed.**
 - **Read the ledger at each draw.** The store is the ledger; the `tick` atom only
   redraws its readers. A desktop session starts in a spare folder and gets its
