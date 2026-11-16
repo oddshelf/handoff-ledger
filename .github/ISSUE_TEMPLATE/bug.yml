@@ -25,7 +25,7 @@ body:
     attributes:
       label: Claude Code version
       description: "`claude --version`. Mods need a build with function-hook plugins, so \"no button, no error\" can be a version answer rather than a bug."
-      placeholder: "2.1.311"
+      placeholder: "2.1.325"
     validations:
       required: true
 

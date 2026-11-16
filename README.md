@@ -67,7 +67,7 @@ Replies from subagents are ignored.
 
 ## Install
 
-Needs a Claude Code build with function-hook plugins; tested against 2.1.311.
+Needs a Claude Code build with function-hook plugins; tested against 2.1.325.
 
 At the prompt of a terminal session:
 
