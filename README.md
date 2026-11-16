@@ -88,9 +88,10 @@ plugin.
 
 | Hook | Reads | Changes |
 | --- | --- | --- |
-| `turn.complete` | the finished reply's text | appends its hand-off items to the mod's store |
-| `session.start` | this repo's stored items | registers `/handoffs` |
-| `ui.render` (`AbovePrompt`, `Pane`) | the open items | draws the button and the pane; **Done** deletes an item, **Clear all** deletes this repo's |
+| `session.start` | nothing | registers `/handoffs` |
+| `command.run` (`/handoffs`) | nothing | opens the pane |
+| `turn.complete` | the finished reply's text, and this repo's open items to skip one already there | appends the reply's hand-off items to the mod's store |
+| `ui.render` (`AbovePrompt`, `Pane`) | this repo's open items, at each draw | draws the button and the pane; **Done** deletes an item, **Clear all** deletes this repo's, **Copy command** puts an item's command on the clipboard |
 
 Items live in Claude Code's per-plugin store on your machine, keyed by the
 session's working directory, so each repo has its own ledger. The reply the
