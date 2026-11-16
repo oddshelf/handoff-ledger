@@ -9,7 +9,9 @@ const PANE = 'handoffs'
 const DAY = 86_400_000
 const MARKER = /^(?:[-*]|\d+\.)\s+/
 
-const open = atom({ plugin: 'handoff-ledger', key: 'open' } as const, [], { shape: 'handoffs-1' })
+// Only redraws the readers: the ledger is read from the store at each draw, because
+// a desktop session starts in a spare folder and gets its real cwd afterwards.
+const tick = atom({ plugin: 'handoff-ledger', key: 'tick' } as const, 0, { shape: 'tick-1' })
 
 const parse = (answer: string, heading: string): Draft[] => {
   const lines = answer.split('\n')
@@ -61,7 +63,7 @@ const load = async ($: EngineInterface): Promise<Handoff[]> => {
 const change = async ($: EngineInterface, fn: (list: Handoff[]) => Handoff[]) => {
   const list = fn(await load($))
   await $.store.set(await key($), list)
-  await update($, open, () => list)
+  await update($, tick, n => n + 1)
 }
 
 export const register: Register = (on, options) => {
@@ -70,8 +72,6 @@ export const register: Register = (on, options) => {
 
   on('session.start', async ($, e, next) => {
     await $.command.register({ name: 'handoffs', description: 'Open the hand-off ledger pane' })
-    const list = await load($)
-    await update($, open, () => list)
     return next(e)
   })
 
@@ -97,7 +97,8 @@ export const register: Register = (on, options) => {
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     const below = await next(e)
-    const list = await read($, open)
+    await read($, tick)
+    const list = await load($)
     if (e.props.hasSurvey || list.length === 0) return below
 
     const { Box, Button } = $.ui.resolve(e)
@@ -120,7 +121,8 @@ export const register: Register = (on, options) => {
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Text, Button } = $.ui.resolve(e)
-    const list = await read($, open)
+    await read($, tick)
+    const list = await load($)
     const now = await $.clock.now()
 
     return (

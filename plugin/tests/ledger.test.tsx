@@ -31,10 +31,10 @@ const PANE = {
 
 const DAY = 86_400_000
 
-const engine = (on: On, entries: Record<string, unknown> = {}, now = 0) => {
+const engine = (on: On, entries: Record<string, unknown> = {}, now = 0, cwd = () => '/repo') => {
   mock.store(on, entries)
   mock.clock(on, { now })
-  on('session.cwd', () => ({ value: '/repo' }))
+  on('session.cwd', () => ({ value: cwd() }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('command.register', () => ({ value: { command: 'handoffs' } }))
   on('ui.open', () => ({ value: { isPlaced: true } }))
@@ -171,5 +171,16 @@ test('the heading option decides which block is kept and names the band', { opti
 
   const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
   expect((await band.find({ key: 'handoffs' }))?.props.label).toBe('✋ Your turn 1')
+  await band.unmount()
+})
+
+test('a session started in another folder and then moved to a repo shows that repo’s ledger', async ($, on) => {
+  let cwd = '/spare'
+  engine(on, { 'open:/repo': [{ id: 'a', at: 0, text: 'owed here' }] }, 0, () => cwd)
+  await $.session.start({ cwd: '/spare', surface: 'desktop', isInteractive: true })
+  cwd = '/repo'
+
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect((await band.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 1')
   await band.unmount()
 })

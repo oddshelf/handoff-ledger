@@ -17,6 +17,10 @@ Each is pinned by a test in `plugin/tests/ledger.test.tsx`.
 - **Render what is beneath.** The `AbovePrompt` hook awaits `next(e)` and
   returns it inside its own column; dropping it erases every other mod's band.
 - **Draw nothing when nothing is owed.**
+- **Read the ledger at each draw.** The store is the ledger; the `tick` atom only
+  redraws its readers. A desktop session starts in a spare folder and gets its
+  real cwd afterwards, with no `session.start` after the move, so a list read
+  at `session.start` is the wrong repo's.
 - **Ignore subagent turns.** A `turn.complete` with an `agentId` is a
   subagent's report, not a reply the user reads.
 - **One ledger per working directory.** The store key carries
