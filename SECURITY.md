@@ -1,6 +1,6 @@
 # Security Policy
 
-## Reporting a Vulnerability
+## Reporting a vulnerability
 
 **Do not open a public issue.** This repository *is* the marketplace people
 install from, so a working exploit in a public issue is a working exploit
@@ -9,8 +9,8 @@ against every install that has already pulled.
 Use [GitHub's private vulnerability reporting](https://github.com/zexion7873/handoff-ledger/security/advisories/new).
 
 This is a one-person project. You will get a first response within a few days,
-not within hours, and the fix ships as a version bump in
-`plugin/.claude-plugin/plugin.json` — nothing else reaches an install.
+not within hours. The fix ships as a version bump in
+`plugin/.claude-plugin/plugin.json`; nothing else reaches an install.
 
 ## Supported versions
 
@@ -18,34 +18,29 @@ The latest published version only. There are no maintenance branches, and tags
 play no part: whatever `plugin/.claude-plugin/plugin.json` says on `main` is what
 `claude plugin update` hands out, and older versions are never patched.
 
-## What this plugin actually does on your machine
+## What this plugin does
 
 Worth knowing before you decide whether something is in scope. It is one mod
-module run inside Claude Code's own engine. It:
+module run inside Claude Code's own engine.
 
-- reads the text of each finished main-thread reply, at the `turn.complete`
-  event, and looks for the configured hand-off heading;
-- writes the items under that heading — their text, any command, any reason,
-  and the time — to Claude Code's per-plugin store, a file on your disk in
-  plain text, under a key that carries the session's working directory;
-- draws a button above the prompt and a pane listing those items;
-- puts an item's command on the clipboard when you press **Copy command**, and
-  deletes an item from the store when you press **Done**.
-
-It makes no network requests, opens no ports, makes no model calls, runs no
-shell commands, and never alters the reply or the prompt.
-`claude plugin validate plugin` prints every engine call the module makes.
-
-### What that means for you
-
-The ledger holds text a model wrote. **Copy command** copies exactly what the
-reply put in the fenced block; the mod does not vet it. A reply shaped by
-untrusted content (a web page, a file, another tool's output) can leave a
-command in the ledger that you did not ask for, days after the turn that wrote
-it. Read a command before you run it, as you would in the reply itself.
-
-Hand-off items stay in the store until you press **Done**. If a reply's
-hand-off text contains something you would not want on disk, it is on disk.
+- It reads the text of each finished main-thread reply, at the `turn.complete`
+  event, and looks for the configured hand-off heading.
+- It writes the items under that heading (their text, any command, any reason,
+  and the time) to Claude Code's per-plugin store, a file on your disk in plain
+  text, under a key that carries the session's working directory. They stay
+  there until you press **Done**, so a hand-off that contains something you
+  would not want on disk is on disk.
+- It draws a button above the prompt and a pane listing those items.
+- It puts an item's command on the clipboard when you press **Copy command**.
+  That is exactly what the reply put in the fenced block; the mod does not vet
+  it. A reply shaped by untrusted content (a web page, a file, another tool's
+  output) can leave a command in the ledger that you did not ask for, days
+  after the turn that wrote it. Read a command before you run it, as you would
+  in the reply itself.
+- It makes no network requests, opens no ports, makes no model calls, runs no
+  shell commands, holds no credentials, and never alters the reply or the
+  prompt. `claude plugin validate plugin` prints every engine call the module
+  makes.
 
 ### In scope
 

@@ -11,7 +11,7 @@
   "repository": "https://github.com/zexion7873/handoff-ledger",
   "documentationUrl": "https://github.com/zexion7873/handoff-ledger#readme",
   "supportUrl": "https://github.com/zexion7873/handoff-ledger/issues",
-  "privacyPolicyUrl": "https://github.com/zexion7873/handoff-ledger/blob/main/SECURITY.md#what-this-plugin-actually-does-on-your-machine",
+  "privacyPolicyUrl": "https://github.com/zexion7873/handoff-ledger/blob/main/SECURITY.md#what-this-plugin-does",
   "userConfig": {
     "heading": {
       "type": "string",

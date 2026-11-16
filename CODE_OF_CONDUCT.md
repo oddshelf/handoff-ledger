@@ -1,22 +1,21 @@
 # Code of Conduct
 
 This is a one-person project. There is no moderation team, no committee, and no
-process — pretending otherwise would be the first dishonest thing in the
+process, and pretending otherwise would be the first dishonest thing in the
 repository.
 
 ## What is expected
 
 Discuss the work. Disagree about the work. Both are welcome and neither needs
 softening: a blunt "this is wrong and here is the measurement" is a good issue.
-What is not welcome is aiming any of that at a person rather than at the code —
+What is not welcome is aiming any of that at a person rather than at the code:
 harassment, personal attacks, or anything that would make someone reluctant to
 post a second time.
 
 ## Send work you understand
 
-This is a plugin for an AI coding agent, so most people who arrive here arrive
-with one running. That is fine — it is what the project is for. The rule is
-about comprehension, not tooling:
+This is a mod for an AI coding agent, so most people who arrive here arrive
+with one running. That is fine. The rule is about comprehension, not tooling:
 
 - Do not open a pull request you could not explain line by line if asked.
 - Do not paste an agent's review of code you have not read.
@@ -34,7 +33,7 @@ maintainer, because the maintainer is the only person here.
 If the problem is with the maintainer, that route is useless and saying
 otherwise would be a lie. Use GitHub's own
 [report abuse](https://docs.github.com/en/communities/maintaining-your-safety-on-github/reporting-abuse-or-spam)
-flow — it is the escalation that is not me.
+flow, which is the escalation that is not me.
 
 ## What happens
 

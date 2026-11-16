@@ -5,20 +5,17 @@ body:
   - type: markdown
     attributes:
       value: |
-        Two things decide whether a report is actionable here, and both are
-        easy to check before you write anything:
-
-        - **`claude plugin list`** — the version that actually reached you, and
-          whether it is loaded at all.
-        - **The heading option** — the mod keeps only what follows one exact
-          line. If your instructions and the option disagree by a character,
-          nothing is kept, and that is the option, not a bug.
+        One question decides most reports here, and it is easy to answer
+        before you write anything: does the **Hand-off heading** option match
+        the line in your instructions, character for character? The mod keeps
+        only what follows that exact line. If the two disagree, nothing is
+        kept, and that is the option, not a bug.
 
   - type: input
     id: version
     attributes:
       label: handoff-ledger version
-      description: "`claude plugin list` — the line for `handoff-ledger@handoff-ledger`. Not the version on `main`."
+      description: "`claude plugin list`, the line for `handoff-ledger@handoff-ledger`. Not the version on `main`."
       placeholder: "0.1.0"
     validations:
       required: true
@@ -56,16 +53,27 @@ body:
   - type: textarea
     id: what
     attributes:
-      label: What the ledger showed, and what you expected instead
+      label: What happened, and what you expected instead
+      description: The items the pane listed, next to the items you expected from the block above.
     validations:
       required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: How to make it happen again
+      description: If you cannot reproduce it, say so. An intermittent report with real timestamps beats a confident guess.
+      placeholder: |
+        1. Start a new session in a repo
+        2. Get a reply that ends with the hand-off block above
+        3. Open /handoffs: the second item is missing
 
   - type: checkboxes
     id: checked
     attributes:
       label: Before submitting
       options:
-        - label: I have read the version I am running, not the version on main.
+        - label: I saw this happen myself, on the version I named above.
           required: true
         - label: The heading option matches the line in my instructions, character for character.
           required: true

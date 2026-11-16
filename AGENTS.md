@@ -41,6 +41,8 @@ claude plugin validate .                 # the marketplace manifest only
 claude plugin validate --strict plugin   # the plugin and every engine call it makes
 claude plugin test plugin                # plugin/**/*.test.tsx in the engine's harness
 node tools/make-icon.mts | rsvg-convert -o plugin/.claude-plugin/icon.png    # marketplace icon
+node tools/make-hero.mts > docs/hero.svg                                      # README hero
+node tools/make-social-card.mts | rsvg-convert -o docs/social-card.png       # social preview
 (cd plugin && tsc -p .)                  # only after the mod has loaded once
 ```
 
@@ -55,6 +57,18 @@ the shipped tree, and nothing in the tree names it. The marketplace takes the
 icon only from the first save or submission in the developer portal, so
 regenerating it after that changes the file and not the listing. It is not
 checked in CI: the PNG depends on the machine's rasteriser.
+
+## The hero and the social card
+
+`docs/hero.svg` (the README's image) and `docs/social-card.png` (the repo's
+social preview) are drawn by `tools/make-hero.mts` and
+`tools/make-social-card.mts` from `tools/pane.mts`, a hand-drawn copy of the
+pane: the mod's own tree needs the engine. Change a button label or what a row
+shows in `register.tsx` and both are stale; nothing checks either. The card
+also renders `plugin.json`'s description and throws if it stops reading
+`<tagline>: <accent>`. GitHub takes the social preview only through Settings →
+General → Social preview, so a regenerated PNG is not live until someone
+uploads it there. The README's `width=` must match the SVG's own `width`.
 
 ## CI and releases
 
