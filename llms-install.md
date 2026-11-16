@@ -30,7 +30,7 @@ The `/plugin` commands in the README are REPL slash commands and won't work
 from a shell. Use the CLI:
 
 ```bash
-claude plugin marketplace add zexion7873/handoff-ledger
+claude plugin marketplace add oddshelf/handoff-ledger
 claude plugin install handoff-ledger@handoff-ledger
 ```
 
