@@ -15,8 +15,10 @@ install and out of the plugin directory's review.
 Each is pinned by a test in `plugin/tests/ledger.test.tsx`.
 
 - **Render what is beneath.** The `AbovePrompt` hook awaits `next(e)` and
-  returns it on one line with its own button; dropping it erases whatever
-  another mod drew on this row.
+  returns it with its own button; dropping it erases whatever another mod drew
+  on this row. Another mod's tree shares one line with the button. Core's own
+  drawing (`type: 'engine'`) stays out of that line: in a row with it, the
+  desktop app draws the button at the right edge.
 - **Draw nothing when nothing is owed.**
 - **Read the ledger at each draw.** The store is the ledger; the `tick` atom only
   redraws its readers. A desktop session starts in a spare folder and gets its
