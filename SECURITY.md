@@ -30,7 +30,9 @@ module run inside Claude Code's own engine.
   text, under a key that carries the session's working directory. They stay
   there until you press **Done** or **Clear all**, so a hand-off that contains something you
   would not want on disk is on disk.
-- It draws a button above the prompt and a pane listing those items.
+- It draws a button above the prompt and a pane listing those items. An item's
+  text is drawn as markdown, as the reply's was, so a link a reply put in a
+  hand-off is a link in the pane.
 - It puts an item's command on the clipboard when you press **Copy command**.
   That is exactly what the reply put in the fenced block; the mod does not vet
   it. A reply shaped by untrusted content (a web page, a file, another tool's

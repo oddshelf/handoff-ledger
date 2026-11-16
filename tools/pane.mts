@@ -12,7 +12,7 @@ export const COLOR = {
 export const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif"
 export const MONO = "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
 export const TITLE = 'Your turn'
-export const PANE = { width: 320, height: 320 } as const
+export const PANE = { width: 320, height: 340 } as const
 
 const ITEMS = [
   { text: 'Push the branch', command: 'git push origin main' },
@@ -31,8 +31,11 @@ export const pane = () => {
   ]
   let y = 68
   for (const item of ITEMS) {
-    const age = item.age === undefined ? '' : `<tspan dx="5" fill="${COLOR.dim}">(${item.age})</tspan>`
-    parts.push(`<text x="20" y="${y}" font-size="15" fill="${COLOR.text}">${item.text}${age}</text>`)
+    parts.push(`<text x="20" y="${y}" font-size="15" fill="${COLOR.text}">${item.text}</text>`)
+    if (item.age !== undefined) {
+      y += 20
+      parts.push(`<text x="20" y="${y}" font-size="13" fill="${COLOR.dim}">${item.age}</text>`)
+    }
     y += 10
     if (item.command !== undefined) {
       parts.push(`<text x="20" y="${y + 12}" font-size="13" font-family="${MONO}" fill="${COLOR.dim}">${item.command}</text>`)

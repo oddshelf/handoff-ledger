@@ -3,7 +3,7 @@
 import { COLOR, MONO, PANE, SANS, TITLE, pane } from './pane.mts'
 
 const W = 760
-const H = 368
+const H = 388
 const LEFT = 28
 const COLUMN = 356
 

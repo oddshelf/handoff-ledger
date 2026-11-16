@@ -124,7 +124,7 @@ export const register: Register = (on, options) => {
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
-    const { Box, Text, Button } = $.ui.resolve(e)
+    const { Box, Text, Markdown, Button } = $.ui.resolve(e)
     await read($, tick)
     const list = await load($)
     const now = await $.clock.now()
@@ -138,11 +138,9 @@ export const register: Register = (on, options) => {
           const { command, note } = item
           return (
             <Box flexDirection="column">
-              <Text>
-                {item.text}
-                {days >= 1 && <Text dimColor> ({days}d ago)</Text>}
-              </Text>
-              {note !== undefined && <Text dimColor>{note}</Text>}
+              <Markdown text={item.text} />
+              {days >= 1 && <Text dimColor>{days}d ago</Text>}
+              {note !== undefined && <Markdown dimColor text={note} />}
               {command !== undefined && <Text dimColor>{command}</Text>}
               <Box flexDirection="row" gap={1}>
                 {command !== undefined && (
