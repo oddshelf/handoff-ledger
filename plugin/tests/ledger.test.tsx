@@ -37,12 +37,24 @@ const engine = (on: On, entries: Record<string, unknown> = {}, now = 0, cwd = ()
   on('session.cwd', () => ({ value: cwd() }))
   on('session.start', (_, e) => ({ cwd: e.cwd }))
   on('command.register', () => ({ value: { command: 'handoffs' } }))
-  on('ui.open', () => ({ value: { isPlaced: true } }))
+  const ui = { calls: [] as string[], isShown: undefined as boolean | undefined }
+  on('ui.open', (_, e) => {
+    ui.calls.push(`open ${e.id}`)
+    return { value: { isPlaced: true } }
+  })
+  on('ui.close', (_, e) => {
+    ui.calls.push(`close ${e.id}`)
+    return { value: undefined }
+  })
+  on('ui.panes', () => ({
+    value: ui.isShown === undefined ? [] : [{ id: 'handoffs', title: '等你動手', isShown: ui.isShown, isFocused: false, isPlaced: true }],
+  }))
   on('turn.complete', (_, e) => ({ text: e.answer }))
   on('ui.render', ($, e) => {
     const { Box, Text } = $.ui.resolve(e)
     return Box({ children: Text({ children: 'beneath' }) })
   })
+  return ui
 }
 
 const shown = async (pane: { findAll: (query: object) => Promise<readonly { type: string; text: string }[]> }) =>
@@ -115,6 +127,28 @@ test('with only the engine beneath, the button is not put in a row', async ($, o
   expect(await band.find({ key: 'handoffs' })).toBeDefined()
   expect(await rows(band)).toHaveLength(0)
   await band.unmount()
+})
+
+test('the button and /handoffs bring the pane forward: one open behind another tab is closed and opened again, any other is only opened', async ($, on) => {
+  const ui = engine(on)
+  await $.turn.complete(turn(REPLY))
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+
+  await band.press({ key: 'handoffs' })
+  expect(ui.calls).toEqual(['open handoffs'])
+
+  ui.isShown = true
+  await band.press({ key: 'handoffs' })
+  expect(ui.calls).toEqual(['open handoffs', 'open handoffs'])
+
+  ui.isShown = false
+  await band.press({ key: 'handoffs' })
+  expect(ui.calls).toEqual(['open handoffs', 'open handoffs', 'close handoffs', 'open handoffs'])
+  await band.unmount()
+
+  ui.calls.length = 0
+  await $.command.run({ command: 'handoffs', args: '', origin: { kind: 'composer' }, presentation: { isFullscreen: true, columns: 120 } })
+  expect(ui.calls).toEqual(['close handoffs', 'open handoffs'])
 })
 
 test('nothing is kept from a reply without the block, or from a subagent’s', async ($, on) => {

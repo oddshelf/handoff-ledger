@@ -69,6 +69,13 @@ const change = async ($: EngineInterface, fn: (list: Handoff[]) => Handoff[]) =>
   await update($, tick, n => n + 1)
 }
 
+// Opening an open pane only retitles it: one behind another tab comes forward by being reopened.
+const show = async ($: EngineInterface, title: string) => {
+  const pane = (await $.ui.panes()).find(p => p.id === PANE)
+  if (pane?.isShown === false) await $.ui.close({ id: PANE })
+  await $.ui.open({ id: PANE, title })
+}
+
 export const register: Register = (on, options) => {
   const heading = (options.heading as string).trim()
   const title = heading.replace(/^[#*_\s]+|[*_\s]+$/g, '')
@@ -79,7 +86,7 @@ export const register: Register = (on, options) => {
   })
 
   on('command.run', { command: 'handoffs' }, async $ => {
-    await $.ui.open({ id: PANE, title })
+    await show($, title)
     return { text: 'Hand-off ledger opened.' }
   })
 
@@ -112,7 +119,7 @@ export const register: Register = (on, options) => {
         plain
         label={`✋ ${title} ${list.length}`}
         onPress={() => {
-          void $.ui.open({ id: PANE, title })
+          void show($, title)
         }}
       />
     )
