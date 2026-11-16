@@ -2,14 +2,14 @@
 
 # ✋ handoff-ledger
 
-[![CI: check](https://github.com/oddshelf/handoff-ledger/actions/workflows/check.yml/badge.svg)](https://github.com/oddshelf/handoff-ledger/actions/workflows/check.yml)
+[![CI: check](https://github.com/zexion7873/handoff-ledger/actions/workflows/check.yml/badge.svg)](https://github.com/zexion7873/handoff-ledger/actions/workflows/check.yml)
 
 <img src="docs/hero.svg" width="760" title="Drawn by hand from sample items, not a screenshot." alt="A drawing of the mod, not a screenshot. On the left, a reply ends with the line Your turn and three bullets: push the branch, restart the app, upload the social preview. Under it, above the prompt box, a button reads Your turn 3. On the right, a pane titled Your turn lists the same three items: the first shows the command git push origin main with a Copy command button and a Done button, the second is marked 2d ago, each has a Done button, and a Clear all button sits under the list.">
 
 **Keeps the things a Claude Code reply left for you to do, per repo, until you
 check them off: a count above the prompt and a pane.**
 
-[![License: MIT](https://img.shields.io/github/license/oddshelf/handoff-ledger?style=flat)](LICENSE)
+[![License: MIT](https://img.shields.io/github/license/zexion7873/handoff-ledger?style=flat)](LICENSE)
 [![Surface: desktop | terminal](https://img.shields.io/badge/surface-desktop%20%7C%20terminal-lightgrey?style=flat)](#what-it-reads-and-writes)
 [![Network: none](https://img.shields.io/badge/network-none-brightgreen?style=flat)](#what-it-reads-and-writes)
 
@@ -71,17 +71,17 @@ Needs a Claude Code build with function-hook plugins; tested against 2.1.311.
 At the prompt of a terminal session:
 
 ```
-/plugin install handoff-ledger --marketplace oddshelf/handoff-ledger
+/plugin install handoff-ledger --marketplace zexion7873/handoff-ledger
 ```
 
 From a shell:
 
 ```bash
-claude plugin install handoff-ledger --marketplace oddshelf/handoff-ledger
+claude plugin install handoff-ledger --marketplace zexion7873/handoff-ledger
 ```
 
 In the desktop app, where `/plugin` does not run: click + next to the prompt
-box, then Plugins, Add marketplace with `oddshelf/handoff-ledger`, then Add
+box, then Plugins, Add marketplace with `zexion7873/handoff-ledger`, then Add
 plugin.
 
 ## What it reads and writes
