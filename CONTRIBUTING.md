@@ -8,8 +8,8 @@ them by surprise; AGENTS.md has the rest.
 
 **The installed copy does not run your checkout.** `handoff-ledger@handoff-ledger`
 from the marketplace runs out of `plugins/cache/`, keyed by the `plugin.json`
-version. Load the checkout instead — `claude --plugin-dir plugin` for one
-session — and it hot-reloads as you edit. If you have both, two buttons are
+version. Load the checkout instead, with `claude --plugin-dir plugin` for one
+session, and it hot-reloads as you edit. If you have both, two buttons are
 drawn and you are editing one of them.
 
 **`tsc` fails on a fresh clone.** `plugin/tsconfig.json` extends
@@ -25,14 +25,19 @@ the wrong folder's. Read it when you draw.
 
 ```bash
 claude --plugin-dir plugin               # a session running this checkout
-claude plugin validate --strict plugin   # the plugin + every engine call the module makes
+claude plugin validate .                 # the marketplace manifest
+claude plugin validate --strict plugin   # the plugin and every engine call the module makes
 claude plugin test plugin                # the tests, exactly as CI runs them
 ```
 
-"Verified" means: validate passes, the tests pass, and **you have looked at the
-button and the pane in a real session** — the desktop Code tab and a terminal
-draw them through different element tables. A green test is one more kind of
-evidence, not a replacement for looking.
+A fresh clone runs all of it with no secrets and no login: validating and
+testing never call the model. Only looking at the mod in a session needs a
+signed-in Claude Code.
+
+"Verified" means: both validates and the tests pass, and **you have looked at
+the button and the pane in a real session**: the desktop Code tab and a
+terminal draw them through different element tables. A green test is one more
+kind of evidence, not a replacement for looking.
 
 ## Pull requests
 
@@ -42,8 +47,9 @@ rule, and the two beside it, are in the
 
 Conventional Commits (`feat:` / `fix:` / `refactor:` / `docs:` / `chore:` /
 `test:` / `perf:`), in English, saying WHY rather than WHAT. One logical change
-per commit. Do not bump the version in your PR — releases are cut separately.
+per commit. Do not bump the version in your PR: releases are cut separately.
 
 If your change alters behaviour, interfaces, or project state, the docs it makes
 stale are part of the diff: README, AGENTS.md, SECURITY.md's list of what the
-mod does, and `llms-install.md`.
+mod does, `llms-install.md`, and `docs/hero.svg` and `docs/social-card.png` if
+what the button or the pane shows has changed.

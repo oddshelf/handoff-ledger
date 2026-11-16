@@ -1,4 +1,4 @@
-# handoff-ledger — install guide for AI agents
+# handoff-ledger: install guide for AI agents
 
 handoff-ledger is a Claude Code mod (a plugin of function hooks): it keeps the
 items a reply leaves under the user's hand-off heading, per repo, behind a
@@ -13,7 +13,7 @@ claude --version
 
 The mod needs a Claude Code build with function-hook plugins. CI validates and
 tests it against 2.1.311; older builds are unmeasured. If the user's version is
-older, tell them so and suggest updating Claude Code first — do not install
+older, tell them so and suggest updating Claude Code first. Do not install
 and hope.
 
 ## 2. Agree on the heading first
@@ -27,7 +27,7 @@ edit their `CLAUDE.md` without asking.
 ## 3. Install
 
 The `/plugin` commands in the README are REPL slash commands and won't work
-from a shell — use the CLI:
+from a shell. Use the CLI:
 
 ```bash
 claude plugin marketplace add zexion7873/handoff-ledger
