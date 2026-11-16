@@ -92,7 +92,8 @@ export const register: Register = (on, options) => {
     await change($, list => [
       ...list,
       ...found
-        .filter(f => !list.some(o => o.text === f.text && o.command === f.command))
+        // A command is the item's identity: a reply rewords the line beside it.
+        .filter(f => !list.some(o => o.command === f.command && (f.command !== undefined || o.text === f.text)))
         .map((f, i) => ({ ...f, id: `${at}-${i}`, at })),
     ])
     return r

@@ -108,6 +108,21 @@ test('the same item owed twice is kept once', async ($, on) => {
   await band.unmount()
 })
 
+test('an item reworded around the same command is kept once; a reworded item without one is a new item', async ($, on) => {
+  engine(on)
+  await $.turn.complete(turn('**等你動手**\n- 重新登入\n  ```bash\n  claude /login\n  ```\n- 上傳預覽圖'))
+  await $.turn.complete(turn('**等你動手**\n- 選做，CLI 重登\n  ```bash\n  claude /login\n  ```\n- 上傳預覽圖（合併後）'))
+
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual([
+    '重新登入',
+    'claude /login',
+    '上傳預覽圖',
+    '上傳預覽圖（合併後）',
+  ])
+  await pane.unmount()
+})
+
 test('a new session reads this repo’s ledger, with each item’s age, and Done removes it for good', async ($, on) => {
   const stored = {
     'open:/repo': [

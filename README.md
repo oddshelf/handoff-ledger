@@ -58,7 +58,9 @@ Everything after the heading's last occurrence in the reply:
 - in a bulleted block, a line with no bullet is the reason for the item above it
 - in a block with no bullets at all, every line is an item
 
-An item whose text and command match one already open is not added twice.
+An item is not added twice: one with a command matches an open item with the
+same command, however the line beside it is worded, and one without a command
+matches on its exact text.
 Replies from subagents are ignored.
 
 ## Install
