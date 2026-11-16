@@ -4,7 +4,7 @@
 
 [![CI: check](https://github.com/zexion7873/handoff-ledger/actions/workflows/check.yml/badge.svg)](https://github.com/zexion7873/handoff-ledger/actions/workflows/check.yml)
 
-<img src="docs/hero.svg" width="760" title="Drawn by hand from sample items, not a screenshot." alt="A drawing of the mod, not a screenshot. On the left, a reply ends with the line Your turn and three bullets: push the branch, restart the app, upload the social preview. Under it, above the prompt box, a button reads Your turn 3. On the right, a pane titled Your turn lists the same three items: the first shows the command git push origin main with a Copy command button and a Done button, the second is marked 2d ago, and each has a Done button.">
+<img src="docs/hero.svg" width="760" title="Drawn by hand from sample items, not a screenshot." alt="A drawing of the mod, not a screenshot. On the left, a reply ends with the line Your turn and three bullets: push the branch, restart the app, upload the social preview. Under it, above the prompt box, a button reads Your turn 3. On the right, a pane titled Your turn lists the same three items: the first shows the command git push origin main with a Copy command button and a Done button, the second is marked 2d ago, each has a Done button, and a Clear all button sits under the list.">
 
 **Keeps the things a Claude Code reply left for you to do, per repo, until you
 check them off: a count above the prompt and a pane.**
@@ -27,7 +27,8 @@ until you check them off:
 
 - a button above the prompt, `✋ <heading> 3`, drawn only while something is owed
 - a pane (the button, or `/handoffs`) listing each item with its age, its
-  command with a **Copy command** button, and a **Done** button
+  command with a **Copy command** button, and a **Done** button; **Clear all**
+  empties the repo's ledger after a second press
 
 It draws in the desktop app's Code tab and in the terminal. It makes no model
 calls and no network requests.
@@ -86,7 +87,7 @@ plugin.
 | --- | --- | --- |
 | `turn.complete` | the finished reply's text | appends its hand-off items to the mod's store |
 | `session.start` | this repo's stored items | registers `/handoffs` |
-| `ui.render` (`AbovePrompt`, `Pane`) | the open items | draws the button and the pane; **Done** deletes an item |
+| `ui.render` (`AbovePrompt`, `Pane`) | the open items | draws the button and the pane; **Done** deletes an item, **Clear all** deletes this repo's |
 
 Items live in Claude Code's per-plugin store on your machine, keyed by the
 session's working directory, so each repo has its own ledger. The reply the

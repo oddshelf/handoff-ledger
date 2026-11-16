@@ -131,6 +131,49 @@ test('a new session reads this repo’s ledger, with each item’s age, and Done
   await band.unmount()
 })
 
+test('Clear all asks once, Keep backs out, and the second press empties this repo’s ledger only', async ($, on) => {
+  const stored = {
+    'open:/repo': [
+      { id: 'a', at: 0, text: 'one' },
+      { id: 'b', at: 0, text: 'two' },
+    ],
+    'open:/elsewhere': [{ id: 'c', at: 0, text: 'not ours' }],
+  }
+  let cwd = '/repo'
+  engine(on, stored, 0, () => cwd)
+
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all')
+  expect(await pane.find({ key: 'keep' })).toBeUndefined()
+
+  await pane.press({ key: 'clear' })
+  expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all 2?')
+  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['one', 'two'])
+
+  await pane.press({ key: 'keep' })
+  expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all')
+
+  await pane.press({ key: 'clear' })
+  await pane.press({ key: 'done-a' })
+  expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all')
+  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['two'])
+
+  await pane.press({ key: 'clear' })
+  await pane.press({ key: 'clear' })
+  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['Nothing owed.'])
+  expect(await pane.find({ key: 'clear' })).toBeUndefined()
+  await pane.unmount()
+
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await band.find({ key: 'handoffs' })).toBeUndefined()
+  await band.unmount()
+
+  cwd = '/elsewhere'
+  const other = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect((await other.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 1')
+  await other.unmount()
+})
+
 test('in a bulleted block an unmarked line is the why of the item above it', async ($, on) => {
   engine(on)
   await $.turn.complete(

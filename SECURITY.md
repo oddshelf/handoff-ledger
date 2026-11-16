@@ -28,7 +28,7 @@ module run inside Claude Code's own engine.
 - It writes the items under that heading (their text, any command, any reason,
   and the time) to Claude Code's per-plugin store, a file on your disk in plain
   text, under a key that carries the session's working directory. They stay
-  there until you press **Done**, so a hand-off that contains something you
+  there until you press **Done** or **Clear all**, so a hand-off that contains something you
   would not want on disk is on disk.
 - It draws a button above the prompt and a pane listing those items.
 - It puts an item's command on the clipboard when you press **Copy command**.
