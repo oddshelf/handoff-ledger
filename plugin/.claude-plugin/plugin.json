@@ -1,17 +1,17 @@
 {
   "name": "handoff-ledger",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Keeps the hand-off items a reply leaves you, per repo, until you check them off: a count above the prompt and a pane",
   "types": "./types/index.d.ts",
   "author": {
     "name": "Kevin Lin"
   },
   "keywords": ["claude-code-mod", "hand-off", "todo", "ledger", "overlay"],
-  "homepage": "https://github.com/oddshelf/handoff-ledger#readme",
-  "repository": "https://github.com/oddshelf/handoff-ledger",
-  "documentationUrl": "https://github.com/oddshelf/handoff-ledger#readme",
-  "supportUrl": "https://github.com/oddshelf/handoff-ledger/issues",
-  "privacyPolicyUrl": "https://github.com/oddshelf/handoff-ledger/blob/main/SECURITY.md#what-this-plugin-does",
+  "homepage": "https://github.com/zexion7873/handoff-ledger#readme",
+  "repository": "https://github.com/zexion7873/handoff-ledger",
+  "documentationUrl": "https://github.com/zexion7873/handoff-ledger#readme",
+  "supportUrl": "https://github.com/zexion7873/handoff-ledger/issues",
+  "privacyPolicyUrl": "https://github.com/zexion7873/handoff-ledger/blob/main/SECURITY.md#what-this-plugin-does",
   "userConfig": {
     "heading": {
       "type": "string",
