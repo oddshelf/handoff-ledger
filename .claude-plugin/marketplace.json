@@ -1,0 +1,12 @@
+{
+  "name": "handoff-ledger",
+  "owner": { "name": "Kevin Lin" },
+  "description": "handoff-ledger: the things a Claude Code reply left for you to do, kept per repo until you check them off",
+  "plugins": [
+    {
+      "name": "handoff-ledger",
+      "source": "./plugin",
+      "description": "Keeps the hand-off items a reply leaves you, per repo, until you check them off: a count above the prompt and a pane"
+    }
+  ]
+}

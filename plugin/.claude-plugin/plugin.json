@@ -1,0 +1,21 @@
+{
+  "name": "handoff-ledger",
+  "version": "0.1.0",
+  "description": "Keeps the hand-off items a reply leaves you, per repo, until you check them off: a count above the prompt and a pane",
+  "types": "./types/index.d.ts",
+  "author": {
+    "name": "Kevin Lin"
+  },
+  "keywords": ["claude-code-mod", "hand-off", "todo", "ledger", "overlay"],
+  "homepage": "https://github.com/zexion7873/handoff-ledger#readme",
+  "repository": "https://github.com/zexion7873/handoff-ledger",
+  "supportUrl": "https://github.com/zexion7873/handoff-ledger/issues",
+  "userConfig": {
+    "heading": {
+      "type": "string",
+      "title": "Hand-off heading",
+      "description": "The line, written exactly as your instructions tell Claude to write it, that opens a reply's hand-off block. Everything after its last occurrence is kept.",
+      "default": "**等你動手**"
+    }
+  }
+}
