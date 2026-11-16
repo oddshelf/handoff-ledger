@@ -90,13 +90,30 @@ test('a reply’s hand-off block lands in the band count and the pane', async ($
   }
 })
 
-test('the button sits on one line with what is beneath', async ($, on) => {
+const rows = async (band: { findAll: (query: object) => Promise<readonly { props: Record<string, unknown> }[]> }) =>
+  (await band.findAll({ type: 'Box' })).filter(b => b.props.flexDirection === 'row')
+
+test('the button sits on one line with what another mod drew on this row', async ($, on) => {
+  engine(on)
+  on('ui.render', { component: 'AbovePrompt', plugin: 'handoff-ledger' }, ($, e) => {
+    const { Box, Text } = $.ui.resolve(e)
+    return Box({ children: Text({ children: 'joined' }) })
+  })
+  await $.turn.complete(turn(REPLY))
+
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await band.find({ type: 'Text', text: /^joined$/ })).toBeDefined()
+  expect(await rows(band)).toHaveLength(1)
+  await band.unmount()
+})
+
+test('with only the engine beneath, the button is not put in a row', async ($, on) => {
   engine(on)
   await $.turn.complete(turn(REPLY))
 
-  const band = await $.ui.mount({ ...BAND, surface: 'terminal' })
-  const directions = (await band.findAll({ type: 'Box' })).map(b => b.props.flexDirection)
-  expect(directions).toContain('row')
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect(await band.find({ key: 'handoffs' })).toBeDefined()
+  expect(await rows(band)).toHaveLength(0)
   await band.unmount()
 })
 

@@ -106,17 +106,29 @@ export const register: Register = (on, options) => {
     if (e.props.hasSurvey || list.length === 0) return below
 
     const { Box, Button } = $.ui.resolve(e)
+    const button = (
+      <Button
+        key="handoffs"
+        plain
+        label={`✋ ${title} ${list.length}`}
+        onPress={() => {
+          void $.ui.open({ id: PANE, title })
+        }}
+      />
+    )
+    // In a row with core's own drawing, the desktop app draws the button at the right edge.
+    if (below.type === 'engine') {
+      return (
+        <Box flexDirection="column">
+          {below}
+          <Box>{button}</Box>
+        </Box>
+      )
+    }
     return (
       <Box flexDirection="row" gap={2}>
         {below}
-        <Button
-          key="handoffs"
-          plain
-          label={`✋ ${title} ${list.length}`}
-          onPress={() => {
-            void $.ui.open({ id: PANE, title })
-          }}
-        />
+        {button}
       </Box>
     )
   })
