@@ -26,7 +26,8 @@ reply, takes the items under your hand-off heading, and keeps them per repo
 until you check them off:
 
 - a button above the prompt, `✋ <heading> 3`, drawn only while something is owed
-- a pane (the button, or `/handoffs`) listing each item with its age, its
+- a pane (the button, or `/handoffs`) listing each item, drawn as markdown
+  the way the reply drew it, with its age, its
   command with a **Copy command** button, and a **Done** button; **Clear all**
   empties the repo's ledger after a second press
 

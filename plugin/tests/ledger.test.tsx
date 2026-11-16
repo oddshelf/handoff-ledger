@@ -45,6 +45,9 @@ const engine = (on: On, entries: Record<string, unknown> = {}, now = 0, cwd = ()
   })
 }
 
+const shown = async (pane: { findAll: (query: object) => Promise<readonly { type: string; text: string }[]> }) =>
+  (await pane.findAll({})).filter(e => e.type === 'Text' || e.type === 'Markdown').map(e => e.text)
+
 const turn = (answer: string, agentId?: string) =>
   ({ answer, durationMs: 0, isAborted: false, turnId: 't', reason: 'answer', ...(agentId ? { agentId } : {}) }) as const
 
@@ -74,7 +77,7 @@ test('a reply’s hand-off block lands in the band count and the pane', async ($
     await band.unmount()
 
     const pane = await $.ui.mount({ ...PANE, surface })
-    const texts = (await pane.findAll({ type: 'Text' })).map(t => t.text)
+    const texts = await shown(pane)
     expect(texts).toEqual([
       '推上 main（dcg 擋我）',
       'git push origin main',
@@ -114,7 +117,7 @@ test('an item reworded around the same command is kept once; a reworded item wit
   await $.turn.complete(turn('**等你動手**\n- 選做，CLI 重登\n  ```bash\n  claude /login\n  ```\n- 上傳預覽圖（合併後）'))
 
   const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual([
+  expect(await shown(pane)).toEqual([
     '重新登入',
     'claude /login',
     '上傳預覽圖',
@@ -135,9 +138,9 @@ test('a new session reads this repo’s ledger, with each item’s age, and Done
   await $.session.start({ cwd: '/repo', surface: 'desktop', isInteractive: true })
 
   const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['old one (3d ago)', ' (3d ago)', 'fresh one'])
+  expect(await shown(pane)).toEqual(['old one', '3d ago', 'fresh one'])
   await pane.press({ key: 'done-a' })
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['fresh one'])
+  expect(await shown(pane)).toEqual(['fresh one'])
   await pane.unmount()
 
   await $.session.start({ cwd: '/repo', surface: 'desktop', isInteractive: true })
@@ -163,7 +166,7 @@ test('Clear all asks once, Keep backs out, and the second press empties this rep
 
   await pane.press({ key: 'clear' })
   expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all 2?')
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['one', 'two'])
+  expect(await shown(pane)).toEqual(['one', 'two'])
 
   await pane.press({ key: 'keep' })
   expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all')
@@ -171,11 +174,11 @@ test('Clear all asks once, Keep backs out, and the second press empties this rep
   await pane.press({ key: 'clear' })
   await pane.press({ key: 'done-a' })
   expect((await pane.find({ key: 'clear' }))?.props.label).toBe('Clear all')
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['two'])
+  expect(await shown(pane)).toEqual(['two'])
 
   await pane.press({ key: 'clear' })
   await pane.press({ key: 'clear' })
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['Nothing owed.'])
+  expect(await shown(pane)).toEqual(['Nothing owed.'])
   expect(await pane.find({ key: 'clear' })).toBeUndefined()
   await pane.unmount()
 
@@ -187,6 +190,15 @@ test('Clear all asks once, Keep backs out, and the second press empties this rep
   const other = await $.ui.mount({ ...BAND, surface: 'desktop' })
   expect((await other.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 1')
   await other.unmount()
+})
+
+test('an item’s text and reason are drawn as markdown, its command as written', async ($, on) => {
+  engine(on, { 'open:/repo': [{ id: 'a', at: 0, text: '按 `Done`', note: '見 `README`', command: 'echo `date`' }] }, 2 * DAY)
+
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  expect((await pane.findAll({ type: 'Markdown' })).map(m => m.text)).toEqual(['按 `Done`', '見 `README`'])
+  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual(['2d ago', 'echo `date`'])
+  await pane.unmount()
 })
 
 test('in a bulleted block an unmarked line is the why of the item above it', async ($, on) => {
@@ -212,7 +224,7 @@ test('in a bulleted block an unmarked line is the why of the item above it', asy
   await band.unmount()
 
   const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
-  expect((await pane.findAll({ type: 'Text' })).map(t => t.text)).toEqual([
+  expect(await shown(pane)).toEqual([
     '重開 app',
     '新版才載得到',
     'open -a Claude',
