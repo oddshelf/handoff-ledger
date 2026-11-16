@@ -1,0 +1,71 @@
+name: Bug report
+description: The ledger missed an item, kept a wrong one, or drew nothing when it should have
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Two things decide whether a report is actionable here, and both are
+        easy to check before you write anything:
+
+        - **`claude plugin list`** — the version that actually reached you, and
+          whether it is loaded at all.
+        - **The heading option** — the mod keeps only what follows one exact
+          line. If your instructions and the option disagree by a character,
+          nothing is kept, and that is the option, not a bug.
+
+  - type: input
+    id: version
+    attributes:
+      label: handoff-ledger version
+      description: "`claude plugin list` — the line for `handoff-ledger@handoff-ledger`. Not the version on `main`."
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: cli
+    attributes:
+      label: Claude Code version
+      description: "`claude --version`. Mods need a build with function-hook plugins, so \"no button, no error\" can be a version answer rather than a bug."
+      placeholder: "2.1.311"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where were you running Claude Code?
+      options:
+        - Desktop app (Code tab)
+        - Terminal CLI
+        - VS Code / JetBrains extension
+        - More than one, and it differs between them
+    validations:
+      required: true
+
+  - type: textarea
+    id: block
+    attributes:
+      label: The hand-off block, exactly as the reply wrote it
+      description: From the heading line to the end of the reply, as raw text. Most parsing reports are settled by this alone. Remove anything private first.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What the ledger showed, and what you expected instead
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checked
+    attributes:
+      label: Before submitting
+      options:
+        - label: I have read the version I am running, not the version on main.
+          required: true
+        - label: The heading option matches the line in my instructions, character for character.
+          required: true

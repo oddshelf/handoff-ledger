@@ -1,0 +1,29 @@
+name: Idea
+description: Something the ledger should keep, or show differently
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is annoying you
+      description: The situation, not the solution — the hand-off you lost, or the item that should not have been there.
+    validations:
+      required: true
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you had in mind
+      description: Optional. A rough shape is fine, and so is "no idea, but this bothers me."
+
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which part, if you know
+      options:
+        - What counts as an item
+        - The button above the prompt
+        - The pane
+        - Options
+        - Install or update
+        - Not sure

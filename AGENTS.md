@@ -40,14 +40,27 @@ edit. Adding an optional field needs neither.
 claude plugin validate .                 # the marketplace manifest only
 claude plugin validate --strict plugin   # the plugin and every engine call it makes
 claude plugin test plugin                # plugin/**/*.test.tsx in the engine's harness
+node tools/make-icon.mts | rsvg-convert -o plugin/.claude-plugin/icon.png    # marketplace icon
 (cd plugin && tsc -p .)                  # only after the mod has loaded once
 ```
 
 `plugin/.claude-plugin/types/` is written by the engine when the mod loads and
 is gitignored; `plugin/tsconfig.json` extends it.
 
+## The icon
+
+`plugin/.claude-plugin/icon.png` is the marketplace listing icon, drawn by
+`tools/make-icon.mts` and rasterised by `rsvg-convert`. It is the one image in
+the shipped tree, and nothing in the tree names it. The marketplace takes the
+icon only from the first save or submission in the developer portal, so
+regenerating it after that changes the file and not the listing. It is not
+checked in CI: the PNG depends on the machine's rasteriser.
+
 ## CI and releases
 
 `.github/workflows/check.yml` installs Claude Code at a pinned version, the one
 the README's install section names; bump both together. The version line in
-`plugin/.claude-plugin/plugin.json` landing on `main` is the publish.
+`plugin/.claude-plugin/plugin.json` landing on `main` is the publish; a tag or a
+GitHub release publishes nothing. After a release PR merges, tag its merge
+commit with an annotated `vX.Y.Z`, push the tag, then
+`gh release create vX.Y.Z --verify-tag --title vX.Y.Z --notes-file <notes>`.
