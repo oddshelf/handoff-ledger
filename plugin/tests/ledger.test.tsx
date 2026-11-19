@@ -253,6 +253,84 @@ test('Clear all asks once, Keep backs out, and the second press empties this rep
   await other.unmount()
 })
 
+type Ran = { fail?: string; deny?: string; isBackground?: true }
+type Bash = { tool: 'Bash'; command: string; agentId?: string }
+
+// `$.tool.call` is typed over every MCP tool connected where the mod last loaded; after a desktop session that is too deep for tsc.
+const call = ($: { tool: { call: unknown } }, command: string, agentId?: string) =>
+  ($.tool.call as (input: Bash) => Promise<unknown>)({ tool: 'Bash', command, ...(agentId ? { agentId } : {}) })
+
+const shell = (on: On, runs: Record<string, Ran> = {}) =>
+  on('tool.call', (_, e) => {
+    const ran = runs[e.tool === 'Bash' ? e.command : ''] ?? {}
+    if (ran.deny !== undefined) return { deny: ran.deny }
+    if (ran.fail !== undefined) return { result: ran.fail, text: ran.fail, isError: true as const }
+    return { result: { stdout: 'ran', stderr: '', interrupted: false, ...(ran.isBackground && { backgroundTaskId: 'b1' }) } }
+  })
+
+const OWED = {
+  'open:/repo': [
+    { id: 'a', at: 0, text: 'push it', command: 'git push origin main' },
+    { id: 'b', at: 0, text: 'log in', command: 'claude /login' },
+    { id: 'c', at: 0, text: 'restart the app' },
+  ],
+  'open:/elsewhere': [{ id: 'd', at: 0, text: 'not ours', command: 'git push origin main' }],
+}
+
+test('a Bash run of an item’s own command that succeeds checks that item off, in this repo only, and hands the result on', async ($, on) => {
+  let cwd = '/repo'
+  engine(on, OWED, 0, () => cwd)
+  shell(on)
+
+  expect(await call($, ' git push origin main\n', 'agent-1')).toMatchObject({ result: { stdout: 'ran' } })
+
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  expect(await shown(pane)).toEqual(['log in', 'claude /login', 'restart the app'])
+  await pane.unmount()
+
+  cwd = '/elsewhere'
+  const other = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect((await other.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 1')
+  await other.unmount()
+})
+
+test('a run that failed, was refused, or only holds the command checks nothing off; nor does one matching an item’s text', async ($, on) => {
+  engine(on, OWED)
+  shell(on, {
+    'git push origin main': { fail: 'Exit code 1\nrejected' },
+    'claude /login': { deny: 'not allowed' },
+    'restart the app': {},
+  })
+  await call($, 'git push origin main')
+  await call($, 'claude /login')
+  await call($, 'cd /repo && git push origin main')
+  await call($, 'restart the app')
+
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect((await band.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 3')
+  await band.unmount()
+})
+
+test('a command still running in the background is not a command that succeeded', async ($, on) => {
+  engine(on, OWED)
+  shell(on, { 'git push origin main': { isBackground: true } })
+  await call($, 'git push origin main')
+
+  const band = await $.ui.mount({ ...BAND, surface: 'desktop' })
+  expect((await band.find({ key: 'handoffs' }))?.props.label).toBe('✋ 等你動手 3')
+  await band.unmount()
+})
+
+test('an item a reply adds while a run checks another off is kept', async ($, on) => {
+  engine(on, OWED)
+  shell(on)
+  await Promise.all([call($, 'git push origin main'), $.turn.complete(turn('**等你動手**\n- 上傳預覽圖'))])
+
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  expect(await shown(pane)).toEqual(['log in', 'claude /login', 'restart the app', '上傳預覽圖'])
+  await pane.unmount()
+})
+
 test('an item’s text and reason are drawn as markdown, its command as written', async ($, on) => {
   engine(on, { 'open:/repo': [{ id: 'a', at: 0, text: '按 `Done`', note: '見 `README`', command: 'echo `date`' }] }, 2 * DAY)
 

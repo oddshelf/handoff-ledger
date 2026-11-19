@@ -1,6 +1,6 @@
 {
   "name": "handoff-ledger",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "description": "Keeps the hand-off items a reply leaves you, per repo, until you check them off: a count above the prompt and a pane",
   "types": "./types/index.d.ts",
   "author": {

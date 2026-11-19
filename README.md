@@ -31,6 +31,8 @@ until you check them off:
   the way the reply drew it, with its age, its
   command with a **Copy command** button, and a **Done** button; **Clear all**
   empties the repo's ledger after a second press
+- an item checked off by itself when Claude's Bash tool runs that item's
+  command, exactly as written, and it succeeds
 
 It draws in the desktop app's Code tab and in the terminal. It makes no model
 calls and no network requests.
@@ -92,6 +94,7 @@ plugin.
 | `session.start` | nothing | registers `/handoffs` |
 | `command.run` (`/handoffs`) | whether the mod's pane is open and shown | opens the pane; one open behind another pane's tab is closed and opened again, which brings it forward |
 | `turn.complete` | the finished reply's text, and this repo's open items to skip one already there | appends the reply's hand-off items to the mod's store |
+| `tool.call` (`Bash`) | the command of each Bash call and whether it succeeded, after it ran | deletes this repo's items whose command is that command, when the run succeeded in the foreground; the call and its result pass through untouched |
 | `ui.render` (`AbovePrompt`, `Pane`) | this repo's open items, at each draw | draws the button and the pane; the button opens the pane as `/handoffs` does; **Done** deletes an item, **Clear all** deletes this repo's, **Copy command** puts an item's command on the clipboard |
 
 Items live in Claude Code's per-plugin store on your machine, keyed by the
@@ -100,7 +103,12 @@ model wrote and the prompt it reads are never altered.
 
 ## Limits
 
-- Checking off is manual: the mod cannot tell that you ran a command.
+- The mod sees a command run only when Claude's Bash tool runs it. One you run
+  in your own terminal, or with `!` at the prompt, stays until you press
+  **Done**, and so does an item with no command.
+- The command must match the item's exactly, after trimming spaces: one run
+  inside a longer line (`cd repo && ...`), in the background, or with a
+  non-zero exit checks nothing off.
 - The heading must match the configured line exactly, after trimming spaces.
 
 ## License
