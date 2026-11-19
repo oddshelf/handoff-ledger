@@ -61,12 +61,18 @@ const load = async ($: EngineInterface): Promise<Handoff[]> => {
   return Array.isArray(stored) ? (stored as Handoff[]) : []
 }
 
-const change = async ($: EngineInterface, fn: (list: Handoff[]) => Handoff[]) => {
-  const list = fn(await load($))
-  await $.store.set(await key($), list)
-  // A Clear all armed against one list must not fire on another.
-  await update($, armed, () => false)
-  await update($, tick, n => n + 1)
+// Each write is the whole list: two interleaved, and one drops the item the other just added.
+let queue: Promise<unknown> = Promise.resolve()
+
+const change = ($: EngineInterface, fn: (list: Handoff[]) => Handoff[]) => {
+  const work = async () => {
+    await $.store.set(await key($), fn(await load($)))
+    // A Clear all armed against one list must not fire on another.
+    await update($, armed, () => false)
+    await update($, tick, n => n + 1)
+  }
+  queue = queue.then(work, work)
+  return queue
 }
 
 // Opening an open pane only retitles it: one behind another tab comes forward by being reopened.
@@ -104,6 +110,16 @@ export const register: Register = (on, options) => {
         .map((f, i) => ({ ...f, id: `${at}-${i}`, at })),
     ])
     return r
+  })
+
+  on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
+    const ran = await next(e)
+    // A background run has only started: its exit is not in this result.
+    if (ran.deny !== undefined || ran.isError || ran.result.backgroundTaskId !== undefined) return ran
+    const command = e.command.trim()
+    const isRun = (o: Handoff) => o.command?.trim() === command
+    if ((await load($)).some(isRun)) await change($, list => list.filter(o => !isRun(o)))
+    return ran
   })
 
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {

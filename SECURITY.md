@@ -28,8 +28,12 @@ module run inside Claude Code's own engine.
 - It writes the items under that heading (their text, any command, any reason,
   and the time) to Claude Code's per-plugin store, a file on your disk in plain
   text, under a key that carries the session's working directory. They stay
-  there until you press **Done** or **Clear all**, so a hand-off that contains something you
+  there until you press **Done** or **Clear all**, or a run checks them off (below), so a hand-off that contains something you
   would not want on disk is on disk.
+- It reads the command of each Bash tool call and whether the call succeeded,
+  at the `tool.call` event, after the call ran. An item whose command is that
+  command is deleted when the run succeeded. Nothing about the call is stored,
+  and the call and its result are passed on as they were.
 - It draws a button above the prompt and a pane listing those items. An item's
   text is drawn as markdown, as the reply's was, so a link a reply put in a
   hand-off is a link in the pane.

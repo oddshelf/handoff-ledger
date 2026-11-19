@@ -26,6 +26,12 @@ Each is pinned by a test in `plugin/tests/ledger.test.tsx`.
   at `session.start` is the wrong repo's.
 - **Ignore subagent turns.** A `turn.complete` with an `agentId` is a
   subagent's report, not a reply the user reads.
+- **Check an item off only on a press or on proof.** Proof is one thing: a
+  foreground Bash call of the item's own command that succeeded, whoever in the
+  session made it. A reply that stops listing an item proves nothing. A `!`
+  command at the prompt never reaches `tool.call` (Claude Code 2.1.325).
+- **Queue every write.** Each write is the whole list, and hooks interleave:
+  unqueued, a check-off that lands beside a reply's append drops the new item.
 - **One ledger per working directory.** The store key carries
   `$.session.cwd()`; another repo's items never show.
 - **Never call the model, the network, or rewrite what the model reads.** The
